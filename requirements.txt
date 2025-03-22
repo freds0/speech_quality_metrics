@@ -1,0 +1,12 @@
+torch
+torchaudio
+chardet
+pydub
+resemblyzer
+#torchmetrics
+jiwer
+transformers
+tqdm
+pandas
+matplotlib
+seaborn

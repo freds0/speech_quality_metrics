@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "speech_quality_metrics"
+version = "0.0.1"
+authors = [
+  { name="Frederico S. Oliveira"},
+]
+description = "Speech Quality Metrics"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "torch",
+    "torchaudio",
+    "resemblyzer",
+    #"torchmetrics",
+    "jiwer",
+    "pydub",
+    "chardet",
+    "speechbrain",
+    "tqdm",
+    "transformers",
+    "pandas"
+]
+
+[project.urls]
+Homepage = "https://github.com/freds0/speech_quality_metrics"
+Issues = "https://github.com/freds0/speech_quality_metrics/issues"
