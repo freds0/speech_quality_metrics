@@ -6,7 +6,7 @@ import torch
 from os.path import join, exists, dirname, isdir, basename, splitext
 import tempfile
 from jiwer import wer, cer
-from speech_quality_metrics.text.cleaners import basic_cleaners
+from speech_quality_metrics.text.cleaners import basic_cleaner
 
 
 class IntelligibilityMetricsPredictor:
@@ -90,10 +90,10 @@ class IntelligibilityMetricsPredictor:
             file_id = join(parent_directory, basename(filepath))
             filename = splitext(basename(filepath))[0]
             if filename in gt_transcriptions_dict:
-                text = basic_cleaners(text)
-                gt_transcriptions_dict[filename] = basic_cleaners(gt_transcriptions_dict[filename])
-                wer = self._get_wer(text, gt_transcriptions_dict[filename])
-                cer = self._get_cer(text, gt_transcriptions_dict[filename])
+                text1 = basic_cleaner(text)
+                text2 = basic_cleaner(gt_transcriptions_dict[filename])
+                wer = self._get_wer(text1, text2)
+                cer = self._get_cer(text1, text2)
                 scores[file_id] = {
                     "gt": gt_transcriptions_dict[filename],
                     model: text, 
