@@ -5,8 +5,14 @@ pydub
 resemblyzer
 #torchmetrics
 jiwer
-transformers
-tqdm
+numpy
 pandas
+pesq
+pystoi
+scipy
+speechbrain
+tqdm
+transformers
 matplotlib
 seaborn
+huggingface_hub

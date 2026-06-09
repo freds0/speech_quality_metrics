@@ -31,10 +31,17 @@ dependencies = [
     "jiwer",
     "pydub",
     "chardet",
+    "numpy",
+    "pandas",
+    "pesq",
+    "pystoi",
+    "scipy",
     "speechbrain",
     "tqdm",
     "transformers",
-    "pandas"
+    "matplotlib",
+    "seaborn",
+    "huggingface_hub"
 ]
 
 [project.urls]
