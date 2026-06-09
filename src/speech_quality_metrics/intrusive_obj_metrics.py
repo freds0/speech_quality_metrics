@@ -92,23 +92,31 @@ class ObjectiveMetricsPredictor:
         return torch.stack(batch, dim=0)
     
     def _predict_batch(self, fileslist_clean, fileslist_distorted):
-        loaded_data = self._load_file(fileslist_clean[0])
-        if loaded_data is None:
-            return None
-        if not loaded_data:
-            return None
-        _, sr = loaded_data
+            loaded_data = self._load_file(fileslist_clean[0])
+            if loaded_data is None:
+                return None
+            if not loaded_data:
+                return None
+            _, sr = loaded_data
 
-        batch_list_clean = [self._load_file(filepath)[0].squeeze() for filepath in fileslist_clean]
-        batch_list_distorted = [self._load_file(filepath)[0].squeeze() for filepath in fileslist_distorted]
-        batch_clean = self._collate_fn(batch_list_clean).squeeze()
-        batch_distorted = self._collate_fn(batch_list_distorted).squeeze()
+            batch_list_clean = [self._load_file(filepath)[0].squeeze() for filepath in fileslist_clean]
+            batch_list_distorted = [self._load_file(filepath)[0].squeeze() for filepath in fileslist_distorted]
+            batch_clean = self._collate_fn(batch_list_clean).squeeze()
+            batch_distorted = self._collate_fn(batch_list_distorted).squeeze()
 
-        pesq_ref = pesq(16000, batch_clean.numpy(), batch_distorted.numpy(), mode="wb")
-        stoi_ref = stoi(batch_clean.numpy(), batch_distorted.numpy(), 16000, extended=False).item()
-        si_sdr_ref = si_snr(batch_distorted.unsqueeze(0), batch_clean.unsqueeze(0))
-                
-        return stoi_ref, pesq_ref, si_sdr_ref
+            # Verificação preventiva contra NaNs ou Infs nos tensores
+            if torch.isnan(batch_clean).any() or torch.isnan(batch_distorted).any():
+                print(f"\n[Aviso] Ignorando arquivo devido a valores NaN detectados no áudio: {fileslist_clean[0]}")
+                return None
+
+            try:
+                pesq_ref = pesq(16000, batch_clean.numpy(), batch_distorted.numpy(), mode="wb")
+                stoi_ref = stoi(batch_clean.numpy(), batch_distorted.numpy(), 16000, extended=False).item()
+                si_sdr_ref = si_snr(batch_distorted.unsqueeze(0), batch_clean.unsqueeze(0))
+                return stoi_ref, pesq_ref, si_sdr_ref
+            except Exception as e:
+                print(f"\n[Erro] Falha ao processar métricas para {fileslist_clean[0]}: {str(e)}")
+                return None
     
     def _create_batchs(self, fileslist, filelist_distorted, batch_size=1):
         for i in range(0, len(fileslist), batch_size):
